@@ -56,9 +56,10 @@ public class SkyblockMenu implements ModInitializer {
         });
     }
 
-    private void openMenu(ServerPlayerEntity player) {
+        private void openMenu(ServerPlayerEntity player) {
         player.openHandledScreen(new net.minecraft.screen.SimpleNamedScreenHandlerFactory(
-            (syncId, inventory, p) -> new MenuHandler(syncId, inventory, new SimpleInventory(27)),
+            // NOTE: new SimpleInventory(54) for 6 rows
+            (syncId, inventory, p) -> new MenuHandler(syncId, inventory, new SimpleInventory(54)),
             Text.literal("SkyBlock Menu")
         ));
     }
