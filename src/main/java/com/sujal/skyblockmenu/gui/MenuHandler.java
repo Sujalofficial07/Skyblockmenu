@@ -21,6 +21,7 @@ import java.util.Arrays;
 public class MenuHandler extends GenericContainerScreenHandler {
 
     private static final int ROWS = 6;
+    private final Inventory menuInventory; // <-- Fix: Store reference here
 
     public MenuHandler(int syncId, PlayerInventory playerInventory) {
         this(syncId, playerInventory, new SimpleInventory(ROWS * 9));
@@ -28,6 +29,7 @@ public class MenuHandler extends GenericContainerScreenHandler {
 
     public MenuHandler(int syncId, PlayerInventory playerInventory, Inventory inventory) {
         super(SkyblockMenu.MENU_HANDLER_TYPE, syncId, playerInventory, inventory, ROWS);
+        this.menuInventory = inventory; // <-- Fix: Save inventory reference
         
         // --- 1. GUI SETUP (Visuals) ---
         
@@ -94,25 +96,19 @@ public class MenuHandler extends GenericContainerScreenHandler {
         // SECURITY 1: Agar click MENU (Top Inventory 0-53) ke andar hai
         if (slotIndex >= 0 && slotIndex < ROWS * 9) {
             
-            // Logic sirf tab run karo agar 'Pickup' (Left click) hai. 
-            // Drop, Swap, Clone sab ignore honge.
             if (player instanceof ServerPlayerEntity serverPlayer && actionType == SlotActionType.PICKUP) {
                 handleMenuClick(serverPlayer, slotIndex);
             }
             
-            // CRITICAL: Item ko cursor par aane se roko (Force Clear)
             this.setCursorStack(ItemStack.EMPTY); 
-            // Sync client to prevent ghost items
             player.getInventory().markDirty(); 
-            return; // Event ko yahi khatam kar do
+            return; 
         }
         
-        // SECURITY 2: Agar Shift-Click (Quick Move) hai, toh cancel karo
         if (actionType == SlotActionType.QUICK_MOVE) {
             return;
         }
 
-        // Agar inventory ke bahar click kiya (Drop)
         if (actionType == SlotActionType.THROW && slotIndex < ROWS * 9 && slotIndex >= 0) {
             return;
         }
@@ -120,16 +116,15 @@ public class MenuHandler extends GenericContainerScreenHandler {
         super.onSlotClick(slotIndex, button, actionType, player);
     }
 
-    // SECURITY 3: Shift-Click Disable (Extra Safety)
     @Override
     public ItemStack quickMove(PlayerEntity player, int slot) {
         return ItemStack.EMPTY; 
     }
 
-    // SECURITY 4: Dragging Disable (Koi item drag karke andar na daal sake)
     @Override
     public boolean canInsertIntoSlot(ItemStack stack, Slot slot) {
-        return slot.inventory != this.inventory; // Menu inventory mein insert mana hai
+        // Fix: Use 'this.menuInventory' instead of 'this.inventory'
+        return slot.inventory != this.menuInventory; 
     }
 
     private void handleMenuClick(ServerPlayerEntity player, int slotIndex) {
