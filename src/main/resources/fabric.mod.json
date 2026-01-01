@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "skyblockmenu",
+  "version": "${version}",
+  "name": "Skyblock Menu",
+  "description": "Menu System for Skyblock",
+  "authors": ["Sujal"],
+  "contact": {},
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [ "com.sujal.skyblockmenu.SkyblockMenu" ],
+    "client": [ "com.sujal.skyblockmenu.SkyblockMenuClient" ]
+  },
+  "depends": {
+    "fabricloader": ">=0.14.21",
+    "minecraft": "~1.20.1",
+    "java": ">=17",
+    "skyblockcore": "*"
+  }
+}
