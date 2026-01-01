@@ -7,7 +7,7 @@ import net.minecraft.client.gui.screen.ingame.HandledScreens;
 public class SkyblockMenuClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        // Use the standard "Generic Container" screen (Chest UI) for our custom handler
+        // Register Generic Container Screen (Auto handles 3-6 rows)
         HandledScreens.register(SkyblockMenu.MENU_HANDLER_TYPE, GenericContainerScreen::new);
     }
 }
